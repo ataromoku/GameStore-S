@@ -8,10 +8,30 @@ on:
 
 jobs:
   build:
-    name: Build and run tests
+    name: Build
 
     runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+  
+  test:
+    name: Test
+    
+    needs: build
+
+    runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v3
         with:
