@@ -13,15 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print current dir
-        run: pwd
-
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Print current dir
-        run: pwd
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
@@ -30,20 +24,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Print current dir
-        run: pwd
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
       - name: Cache build
         uses: actions/cache@v3
         with:
           path: ./
-          key: ${{ runner.os }}-${{ hashFiles('**/*.dll') }}
-
-      - name: Print current dir
-        run: pwd
-
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+          key: ${{ runner.os }}-test1
   
   test:
     name: Test
@@ -53,25 +41,16 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Print current dir
-        run: pwd
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
 
-      - name: Print current dir
-        run: pwd
-
       - name: Restore build cache
         uses: actions/cache@v3
         with:
           path: ./
-          key: ${{ runner.os }}-${{ hashFiles('**/*.dll') }}
-
-      - name: Print current dir
-        run: pwd
+          key: ${{ runner.os }}-test1
 
       - name: Test
         run: dotnet test --configuration Release --no-build --verbosity normal
