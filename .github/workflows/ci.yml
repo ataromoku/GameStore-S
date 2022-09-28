@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and run tests
+    name: Build
 
     runs-on: ubuntu-latest
 
@@ -16,13 +16,52 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
+          
       - name: Restore dependencies
         run: dotnet restore
+
+      - run: tree
+
+      - name: Cache build
+        uses: actions/cache@v3
+        with:
+          path: .
+          key: ${{ runner.os }}-${{ github.run_id }}
+
+      - run: tree
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
+
+      - run: tree
+  
+  test:
+    name: Test
+    
+    needs: build
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - run: tree
+
+      - name: Restore build cache
+        uses: actions/cache@v3
+        with:
+          path: .
+          key: ${{ runner.os }}-${{ github.run_id }}
+
+      - run: tree
+
       - name: Test
         run: dotnet test --configuration Release --no-build --verbosity normal
