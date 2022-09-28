@@ -24,14 +24,18 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-
       - name: Cache build
         uses: actions/cache@v3
         with:
-          path: ./
-          key: ${{ runner.os }}-test1
+          path: .
+          key: ${{ runner.os }}-test2
+
+      - run: ls -al
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - run: ls -al
   
   test:
     name: Test
@@ -46,11 +50,15 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
+      - run: ls -al
+
       - name: Restore build cache
         uses: actions/cache@v3
         with:
-          path: ./
-          key: ${{ runner.os }}-test1
+          path: .
+          key: ${{ runner.os }}-test2
+
+      - run: ls -al
 
       - name: Test
         run: dotnet test --configuration Release --no-build --verbosity normal
