@@ -31,13 +31,13 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .
-          key: ${{ runner.os }}-${{ github.run_id }}
+          key: ${{ runner.os }}-${{ github.run_id }}-build
           
       - name: Cache nugets
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-${{ github.run_id }}
+          key: ${{ runner.os }}-${{ github.run_id }}-nugets
 
       - run: tree
 
@@ -60,12 +60,18 @@ jobs:
           dotnet-version: 6.0.x
 
       - run: tree
-
+      
       - name: Restore build cache
         uses: actions/cache@v3
         with:
           path: .
-          key: ${{ runner.os }}-${{ github.run_id }}
+          key: ${{ runner.os }}-${{ github.run_id }}-build
+
+      - name: Restore nugets cache
+        uses: actions/cache@v3
+        with:
+          path: .
+          key: ${{ runner.os }}-${{ github.run_id }}-nugets
 
       - run: tree
 
