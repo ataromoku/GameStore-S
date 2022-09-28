@@ -21,8 +21,11 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
+          
       - name: Restore dependencies
         run: dotnet restore
+
+      - run: tree
 
       - name: Cache build
         uses: actions/cache@v3
@@ -30,12 +33,12 @@ jobs:
           path: .
           key: ${{ runner.os }}-${{ github.run_id }}
 
-      - run: ls -al
+      - run: tree
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
-      - run: ls -al
+      - run: tree
   
   test:
     name: Test
@@ -50,7 +53,7 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - run: ls -al
+      - run: tree
 
       - name: Restore build cache
         uses: actions/cache@v3
@@ -58,7 +61,7 @@ jobs:
           path: .
           key: ${{ runner.os }}-${{ github.run_id }}
 
-      - run: ls -al
+      - run: tree
 
       - name: Test
         run: dotnet test --configuration Release --no-build --verbosity normal
